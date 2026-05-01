@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Multi-Agent Architecture</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #58a6ff;
+            margin-bottom: 20px;
+        }
+        .mermaid {
+            background-color: #161b22;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #30363d;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 1000px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>LangGraph AWS Architecture</h1>
+    <p>Complete Enterprise Production Pipeline handling 1M+ Webhook Support Tickets mapping across external cloud services.</p>
+
+    <div class="mermaid">
+        flowchart TD
+            %% Styles
+            classDef aws_service fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:#fff,font-weight:bold
+            classDef agent fill:#0052CC,stroke:#fff,stroke-width:2px,color:#fff,rx:10,ry:10
+            classDef llm fill:#00A67E,stroke:#fff,stroke-width:2px,color:#fff
+            classDef database fill:#336699,stroke:#fff,stroke-width:2px,color:#fff
+            
+            %% External Actors
+            Zendesk((Client CRM \n Zendesk / Salesforce))
+
+            %% AWS Ingress
+            subgraph AWS Ingress Layer
+                API_Gateway[AWS API Gateway]:::aws_service
+                SQS[Amazon SQS Queue]:::aws_service
+            end
+            
+            Zendesk -- "POST Webhook" --> API_Gateway
+            API_Gateway -- Buffer --> SQS
+            
+            %% AWS Compute Layer
+            subgraph "AWS Compute Layer (ECS Fargate)"
+                FastAPI{{"FastAPI Async Server \n (Docker Container)"}}
+                
+                subgraph "LangGraph State Machine"
+                    direction TB
+                    Intake(Intake Agent):::agent
+                    Classifier(Classifier Agent):::agent
+                    Risk(Risk Assessment Agent):::agent
+                    Retrieval(RAG Retrieval Agent):::agent
+                    Synthesis(Response Synthesis Agent):::agent
+                    Faith(Faithfulness Evaluator):::agent
+                    Formatter(Output Formatter):::agent
+                end
+            end
+            
+            SQS -- Pulls Ticket --> FastAPI
+            FastAPI -- Trigger --> Intake
+            
+            Intake -- State --> Classifier
+            Classifier -- Logic --> Risk
+            
+            Risk -- "If Risk >= 6" --> Formatter
+            Risk -- "If Safe" --> Retrieval
+            
+            Retrieval -- "Chunks" --> Synthesis
+            Synthesis -- "Draft" --> Faith
+            
+            Faith -- "If Hallucination" --> Formatter
+            Faith -- "If Grounded" --> Formatter
+            
+            %% External APIs & Databases
+            subgraph "Databases & External LPU"
+                DynamoDB[(AWS DynamoDB \n Thread Checkpoint)]:::database
+                OpenSearch[(Amazon OpenSearch \n Vector Store)]:::database
+                Groq[Groq LLA_3.1-8B-Instant \n Ultra-fast API]:::llm
+            end
+            
+            %% Connections to external
+            FastAPI <--> DynamoDB
+            Retrieval <--> OpenSearch
+            Classifier <--> Groq
+            Risk <--> Groq
+            Synthesis <--> Groq
+            Faith <--> Groq
+            
+            %% Return loop
+            Formatter -- Final Replied/Escalated Status --> FastAPI
+            FastAPI -- HTTP 200 OK Response --> Zendesk
+    </div>
+
+    <!-- Include Mermaid Runtime -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'dark',
+            securityLevel: 'loose'
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "build_timestamp": "2026-05-01T08:10:21.714122+00:00",
+  "corpus_dir": "../data",
+  "domains": {
+    "hackerrank": 4409,
+    "claude": 1352,
+    "visa": 43
+  },
+  "total_chunks": 5804
+}

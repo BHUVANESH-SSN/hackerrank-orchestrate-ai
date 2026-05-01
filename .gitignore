@@ -1,33 +1,40 @@
-# secrets
+# Environments
 .env
-.env.local
-*.pem
-*.key
-
-# deps
-node_modules/
-.pnpm-store/
-.venv/
 venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python caches
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 
-# build
-dist/
-build/
-*.tsbuildinfo
+# Databases & Large Files
+chroma_db/
+*.sqlite3
+*.db
 
-# editor / os
+# OS generated files
 .DS_Store
-.idea/
-.vscode/
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# local data / caches the participant may create
-data/index/
-data/embeddings/
-*.sqlite
-*.db
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# DO NOT IGNORE these hackathon requirements!
+!output.csv
+!log.txt
+!batch.py
