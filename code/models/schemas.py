@@ -8,9 +8,6 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 
-# ──────────────────────────────────────────────
-# Enums
-# ──────────────────────────────────────────────
 
 class Domain(str, Enum):
     HACKERRANK = "hackerrank"
@@ -20,7 +17,6 @@ class Domain(str, Enum):
 
 
 class ProductArea(str, Enum):
-    # HackerRank
     ASSESSMENTS = "assessments"
     CODING_CHALLENGES = "coding_challenges"
     PROCTORING = "proctoring"
@@ -28,10 +24,8 @@ class ProductArea(str, Enum):
     HR_ACCOUNT = "hr_account"
     HR_BUGS = "hr_bugs"
     HR_GENERAL = "hr_general"
-    # -- Community
     COMMUNITY = "community"
     SCREEN = "screen"
-    # Claude
     CLAUDE_API = "claude_api"
     CLAUDE_UI = "claude_ui"
     CLAUDE_BILLING = "claude_billing"
@@ -40,7 +34,6 @@ class ProductArea(str, Enum):
     CLAUDE_GENERAL = "claude_general"
     PRIVACY = "privacy"
     CONVERSATION_MANAGEMENT = "conversation_management"
-    # Visa
     VISA_FRAUD = "visa_fraud"
     VISA_DISPUTES = "visa_disputes"
     VISA_CARD_SERVICES = "visa_card_services"
@@ -49,7 +42,6 @@ class ProductArea(str, Enum):
     VISA_GENERAL = "visa_general"
     TRAVEL_SUPPORT = "travel_support"
     GENERAL_SUPPORT = "general_support"
-    # Fallback
     UNKNOWN = "unknown"
 
 
@@ -80,9 +72,6 @@ class UrgencyLevel(str, Enum):
     CRITICAL = "critical"
 
 
-# ──────────────────────────────────────────────
-# Agent Result Models
-# ──────────────────────────────────────────────
 
 class IntakeResult(BaseModel):
     raw_text: str

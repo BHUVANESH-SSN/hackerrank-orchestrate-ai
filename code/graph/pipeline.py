@@ -16,6 +16,7 @@ from agents.output_formatter import run_output_formatter
 
 
 def route_after_risk(state: GraphState) -> str:
+    ### use of this function: route after risk
     """Conditional edge: after risk assessment, decide path."""
     action = state["risk_result"].action
     if action == Action.ESCALATE:
@@ -25,6 +26,7 @@ def route_after_risk(state: GraphState) -> str:
 
 
 def route_after_faithfulness(state: GraphState) -> str:
+    ### use of this function: route after faithfulness
     """Conditional edge: after faithfulness check, decide path."""
     faith = state.get("faithfulness_result")
     if faith and faith.is_faithful:
@@ -34,10 +36,10 @@ def route_after_faithfulness(state: GraphState) -> str:
 
 
 def build_graph() -> StateGraph:
+    ### use of this function: build graph
     """Build and compile the LangGraph state machine."""
     graph = StateGraph(GraphState)
 
-    # Add nodes
     graph.add_node("intake", run_intake)
     graph.add_node("classifier", run_classifier)
     graph.add_node("risk", run_risk)
@@ -47,7 +49,6 @@ def build_graph() -> StateGraph:
     graph.add_node("escalation", run_escalation)
     graph.add_node("output", run_output_formatter)
 
-    # Linear edges
     graph.set_entry_point("intake")
     graph.add_edge("intake", "classifier")
     graph.add_edge("classifier", "risk")
@@ -56,7 +57,6 @@ def build_graph() -> StateGraph:
     graph.add_edge("escalation", "output")
     graph.add_edge("output", END)
 
-    # Conditional edges
     graph.add_conditional_edges(
         "risk",
         route_after_risk,
@@ -71,18 +71,15 @@ def build_graph() -> StateGraph:
     return graph
 
 
-# Singleton compiled graph
 _app = None
 
 
 def get_pipeline():
+    ### use of this function: get pipeline
     """Get or create the singleton compiled pipeline."""
     global _app
     if _app is None:
-        # Compile the graph with a memory checkpointer (sqlite could be used for prod)
         memory = MemorySaver()
         
-        # We compile the graph. We could add `interrupt_before=["output_formatter"]` 
-        # to implement Human-In-The-Loop (HITL), but we keep it optional for batch processing.
         _app = build_graph().compile(checkpointer=memory)
     return _app

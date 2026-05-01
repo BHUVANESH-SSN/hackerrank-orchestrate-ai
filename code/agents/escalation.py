@@ -7,9 +7,6 @@ from typing import Any
 from models.schemas import Action, ProductArea
 
 
-# ──────────────────────────────────────────────
-# Escalation Response Templates
-# ──────────────────────────────────────────────
 
 ESCALATION_TEMPLATES: dict[str, str] = {
     "Visa Fraud & Security Team": """Thank you for contacting Visa Support. We take security concerns very seriously.
@@ -113,16 +110,15 @@ We appreciate your patience and are committed to resolving your issue.""",
 
 
 def run_escalation(state: dict[str, Any]) -> dict[str, Any]:
+    ### use of this function: run escalation
     """Generate an escalation response using templates."""
     try:
         risk = state["risk_result"]
         team = risk.escalation_team or "Tier 2 Support"
         reason = risk.escalation_reason or "Requires specialized review"
 
-        # Get template
         template = ESCALATION_TEMPLATES.get(team, ESCALATION_TEMPLATES["Tier 2 Support"])
 
-        # For default template, fill in team and reason
         if team not in ESCALATION_TEMPLATES:
             template = (
                 f"Thank you for reaching out to our support team.\n\n"

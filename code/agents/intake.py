@@ -10,15 +10,14 @@ from utils.safety import detect_pii
 
 
 def run_intake(state: dict[str, Any]) -> dict[str, Any]:
+    ### use of this function: run intake
     """Parse the raw ticket text deterministically."""
     try:
         text = state["raw_ticket"]
         subject = state.get("subject", "")
 
-        # Combine issue + subject for analysis
         full_text = f"{subject} {text}" if subject else text
 
-        # 1. Detect urgency signal keywords
         urgency_keywords = [
             "urgent", "immediately", "asap", "emergency", "critical",
             "fraud", "stolen", "hacked", "compromised", "locked out",
@@ -29,10 +28,8 @@ def run_intake(state: dict[str, Any]) -> dict[str, Any]:
         ]
         found_signals = [kw for kw in urgency_keywords if kw.lower() in full_text.lower()]
 
-        # 2. Detect PII
         pii = detect_pii(full_text)
 
-        # 3. Simple sentiment (keyword-based)
         negative_words = [
             "angry", "frustrated", "terrible", "awful", "worst",
             "unacceptable", "disgusting", "annoyed", "furious", "upset",
@@ -53,10 +50,8 @@ def run_intake(state: dict[str, Any]) -> dict[str, Any]:
         else:
             sentiment = "neutral"
 
-        # 4. Extract keywords (simple word extraction)
         keywords = list(set(re.findall(r'\b[A-Za-z]{4,}\b', full_text)))[:20]
 
-        # 5. 1-sentence summary — clean and truncate
         summary_text = text.strip().replace("\n", " ").replace("\r", "")
         summary_text = re.sub(r'\s+', ' ', summary_text)
         summary = summary_text[:200] if summary_text else "No content"

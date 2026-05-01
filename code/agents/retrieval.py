@@ -9,16 +9,15 @@ from rag.retriever import get_retriever
 
 
 def run_retrieval(state: dict[str, Any]) -> dict[str, Any]:
+    ### use of this function: run retrieval
     """Run hybrid retrieval against the domain corpus."""
     try:
         domain = state["domain_result"].domain
         intake = state["intake"]
 
-        # Build a rich retrieval query from intake
         keywords_str = " ".join(intake.keywords[:10])
         query = f"{intake.ticket_summary} {keywords_str}"
 
-        # Run hybrid retrieval
         retriever = get_retriever()
         result = retriever.retrieve(
             domain=domain,
@@ -26,7 +25,6 @@ def run_retrieval(state: dict[str, Any]) -> dict[str, Any]:
             top_k=settings.rerank_top_k,
         )
 
-        # If no results found, update risk to escalate
         update: dict[str, Any] = {"retrieval_result": result}
         if not result.chunks:
             update["risk_result"] = RiskResult(

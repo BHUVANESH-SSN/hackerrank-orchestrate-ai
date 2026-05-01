@@ -12,9 +12,6 @@ from config.settings import settings
 from models.schemas import Domain, ProductArea, RequestType, DomainResult
 
 
-# ──────────────────────────────────────────────
-# Keyword fallback maps
-# ──────────────────────────────────────────────
 
 DOMAIN_KEYWORDS: dict[Domain, list[str]] = {
     Domain.HACKERRANK: [
@@ -34,10 +31,10 @@ DOMAIN_KEYWORDS: dict[Domain, list[str]] = {
 
 
 def _keyword_classify_domain(text: str, company: str) -> Domain:
+    ### use of this function: keyword classify domain
     """Fallback classification using keyword matching and company field."""
     text_lower = text.lower()
 
-    # Company field is the strongest signal
     company_lower = company.lower().strip() if company else ""
     if company_lower in ("hackerrank", "hacker rank"):
         return Domain.HACKERRANK
@@ -46,7 +43,6 @@ def _keyword_classify_domain(text: str, company: str) -> Domain:
     if company_lower in ("visa",):
         return Domain.VISA
 
-    # Keyword scoring
     scores: dict[Domain, int] = {d: 0 for d in Domain}
     for domain, keywords in DOMAIN_KEYWORDS.items():
         for kw in keywords:
@@ -60,6 +56,7 @@ def _keyword_classify_domain(text: str, company: str) -> Domain:
 
 
 def _keyword_classify_request_type(text: str) -> RequestType:
+    ### use of this function: keyword classify request type
     """Classify request type from text using keywords."""
     text_lower = text.lower()
 
@@ -79,6 +76,7 @@ def _keyword_classify_request_type(text: str) -> RequestType:
 
 
 def run_classifier(state: dict[str, Any]) -> dict[str, Any]:
+    ### use of this function: run classifier
     """Classify the ticket into domain + product area using Groq API with keyword fallback."""
     try:
         intake = state["intake"]
@@ -88,7 +86,6 @@ def run_classifier(state: dict[str, Any]) -> dict[str, Any]:
 
         combined = f"{subject}\n{text}" if subject else text
 
-        # Try LLM classification via Groq
         client = Groq(api_key=settings.groq_api_key)
 
         system_prompt = """You are a support ticket classifier. Given a support ticket, you must classify it into exactly one domain and product area, and determine the request type.
@@ -122,7 +119,6 @@ Rules:
 
         user_msg = f"Company: {company}\nSubject: {subject}\n\nFull text: {combined[:800]}"
 
-        # Robust retry for Groq 429 rate limits
         for attempt in range(8):
             try:
                 response = client.chat.completions.create(
@@ -148,7 +144,6 @@ Rules:
 
         response_text = response.choices[0].message.content.strip()
 
-        # Try to extract JSON from response
         json_match = re.search(r'\{[^{}]*\}', response_text, re.DOTALL)
         if json_match:
             data = json.loads(json_match.group())
@@ -171,7 +166,6 @@ Rules:
         confidence = float(data.get("classification_confidence", 0.8))
         reasoning = data.get("classification_reasoning", "Classified by LLM")
 
-        # Keyword fallback if confidence is low
         if confidence < 0.5:
             domain = _keyword_classify_domain(combined, company)
 
@@ -186,7 +180,6 @@ Rules:
         }
 
     except Exception as e:
-        # Full keyword fallback
         text = state.get("raw_ticket", "")
         company = state.get("company", "")
         combined = f"{state.get('subject', '')} {text}"

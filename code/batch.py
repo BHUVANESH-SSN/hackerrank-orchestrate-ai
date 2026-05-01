@@ -21,6 +21,7 @@ console = Console()
 def run_pipeline_on_ticket(
     pipeline, ticket_id: str, ticket_text: str, subject: str = "", company: str = ""
 ) -> TicketOutput:
+    ### use of this function: run pipeline on ticket
     """Run the full pipeline on a single ticket."""
     state: GraphState = {
         "ticket_id": ticket_id,
@@ -37,20 +38,20 @@ def run_pipeline_on_ticket(
         "error": None,
         "start_time_ms": int(time.time() * 1000),
     }
-    result = pipeline.invoke(state)
+    config = {"configurable": {"thread_id": ticket_id}}
+    result = pipeline.invoke(state, config)
     return result["final_output"]
 
 
 def main() -> None:
+    ### use of this function: main
     console.print("[bold cyan]🤖 Batch Processor — Support Triage Agent[/]\n")
 
-    # Load input CSV
     input_path = "../support_tickets/support_tickets.csv"
     df = pd.read_csv(input_path)
     console.print(f"[dim]Loaded {len(df)} tickets from {input_path}[/]")
     console.print(f"[dim]Columns: {list(df.columns)}[/]\n")
 
-    # Detect columns — the CSV has: Issue, Subject, Company
     text_col = None
     for col in ["Issue", "issue", "text", "description", "message", "content", "body", "ticket"]:
         if col in df.columns:
@@ -90,7 +91,6 @@ def main() -> None:
             subject = str(row[subject_col]) if subject_col and pd.notna(row.get(subject_col, "")) else ""
             company = str(row[company_col]) if company_col and pd.notna(row.get(company_col, "")) else ""
 
-            # Clean "None" strings
             if company.strip().lower() == "none":
                 company = ""
 
@@ -133,14 +133,14 @@ def main() -> None:
                 )
 
             progress.advance(task)
-            time.sleep(6)  # Prevent Groq API rate limits (30 RPM free tier). 6 seconds = 10 tickets/min = ~25 calls/min
+            # Always wait at least 8 seconds to respect Groq free tier rate limits
+            # (Classifier and Risk agents still use Groq Llama 8B)
+            time.sleep(8)
 
-    # Write output CSV
     out_df = pd.DataFrame(results)
     out_df.to_csv(settings.output_csv, index=False)
     console.print(f"\n[green]✅ Output written to {settings.output_csv} ({len(results)} tickets)[/]")
 
-    # Save transcript to AGENTS.md mandated location + local copy
     from pathlib import Path
     home_log = Path.home() / "hackerrank_orchestrate" / "log.txt"
     home_log.parent.mkdir(parents=True, exist_ok=True)

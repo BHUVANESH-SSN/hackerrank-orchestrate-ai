@@ -13,9 +13,8 @@
   <img src="https://img.shields.io/badge/Python-3.12-blue?logo=python" alt="Python"/>
   <img src="https://img.shields.io/badge/LangGraph-0.0.35-lightgray?logo=chainlink" alt="LangGraph"/>
   <img src="https://img.shields.io/badge/ChromaDB-Vector_Store-orange" alt="ChromaDB"/>
-  <img src="https://img.shields.io/badge/Llama_3.1-8B_Instant-black" alt="Meta Llama"/>
-  <img src="https://img.shields.io/badge/Groq-LPU_Inference-green?logo=lightning" alt="Groq"/>
-  <img src="https://img.shields.io/badge/FastAPI-Deployment-teal?logo=fastapi" alt="FastAPI"/>
+  <img src="https://img.shields.io/badge/AWS_Bedrock-Claude_3.5-purple" alt="AWS Bedrock"/>
+  <img src="https://img.shields.io/badge/Groq-Qwen3_&_Llama-green?logo=lightning" alt="Groq"/>
   <img src="https://img.shields.io/badge/Hackathon-HackerRank-brightgreen" alt="Hackathon"/>
 </p>
 
@@ -27,99 +26,100 @@
 
 ## Overview
 
-This repository contains an Enterprise-grade Multi-Agent System designed for exactly one purpose: accurately triaging, resolving, and routing Tier-1 Customer Support tickets with zero hallucinations. Built for the **HackerRank Orchestrate May '26 Hackathon**, this pipeline safely processes queries across **HackerRank, Claude, and Visa** domains.
+This repository contains an Enterprise-grade Multi-Agent System designed for exactly one purpose: accurately triaging, resolving, and routing Tier-1 Customer Support tickets with zero hallucinations. Built for the **HackerRank Orchestrate May '26 Hackathon**, this pipeline safely processes queries across the HackerRank, Claude, and Visa domains.
 
-Unlike standard LLM chains, this architecture uses a **LangGraph state machine** to force deterministic safety checks. The system routes incoming messages, checks databases structurally, and employs a rigorous multi-step defense system to catch AI hallucinations before they ever reach the user.
-
-### 💡 The "Middleware Plugin" Philosophy
-This project is engineered as an **Invisible Autonomous Middleware**. It does not feature a customer-facing bot UI. Instead, it seamlessly intercepts Webhooks from a CRM (like Zendesk or Salesforce), evaluates emails against the company's knowledge base, and either:
-1. **Replies Autonomously:** If the ticket is simple and safe.
-2. **Escalates to Humans:** If the issue is complex, dangerous, or requires explicit employee review.
-
-Because the system acts purely as an API gateway plugin between the CRM and the human support team, the logic is **100% Company-Agnostic**. By simply swapping out the vector database documents, this exact identical codebase can confidently triage tickets for HackerRank, Airbnb, Google, or any other enterprise.
+Unlike standard LLM chains, this architecture uses a **LangGraph state machine** to force deterministic safety checks. The system routes incoming messages, retrieves documents via a highly-tuned Hybrid RAG pipeline, and employs a rigorous dual-model defense system to catch AI hallucinations before they ever reach the user.
 
 ---
 
-## Enterprise Features
+## System Design & Core Concepts
 
-### Core Capabilities
-- **LangGraph Orchestration:** A cyclic state machine mapping multi-agent routing (Intake -> Classification -> Risk -> Retrieval -> Synthesis -> Output).
-- **Strict Faithfulness Gate:** The Synthesizer LLM self-critiques its own drafted response against the retrieved ChromaDB chunks. If a hallucination is detected, the `Faithfulness Gate` triggers an immediate human escalation.
-- **Groq-Powered LPU Inference:** Uses the ultra-fast, highly contextual `llama-3.1-8b-instant` running on Groq hardware, achieving parsing speeds of `> 10,000 tokens/sec`.
-- **Deterministic Output Conformity:** The system outputs strict `status, product_area, response, justification, request_type` schemas parsing 100% cleanly into pandas DataFrames.
+![Enterprise Architecture Flowchart](./hacker_rank_agentic_ai.png)
 
-### "Beyond the Basics" (Advanced Add-ons)
-- **Conversational Memory Checkpointing:** Powered by LangGraph's native `MemorySaver`, the pipeline saves inter-turn history tracking using thread IDs.
-- **Native Multilingual Zero-Shot:** The synthesis agent automatically detects inbound ticket languages (e.g., Spanish, Japanese) and natively translates the RAG output while preserving technical jargon.
-- **Sentiment & Churn Risk Detection:** Uses lightweight mathematical sentiment mapping. If `churn_risk=true` or an angry sentiment is identified, the system bypasses RAG and routes directly to the **"Customer Retention" tier**.
+To achieve an enterprise-ready standard, the system relies on several core architectural pillars:
 
----
+### 1. Multi-Agent State Machine (LangGraph)
+The pipeline is orchestrated using LangGraph, breaking down the triage process into distinct, specialized agents that pass a shared state. 
+- **Intake & Classifier Agent:** Quickly parses incoming tickets, sanitizes PII, and maps the core intent into strict domain bounds (e.g., `hr_billing`, `visa_merchant`). It uses Groq (Llama 3.1) for ultra-fast, low-latency classification with a keyword-based fallback mechanism to ensure 100% uptime even during API rate limits.
+- **Risk & Safety Agent:** A deterministic, non-LLM safety layer (`utils/safety.py`). It scans tickets for high-severity triggers (e.g., fraud, legal threats, security vulnerabilities, or PII leaks). High-risk tickets are instantly escalated to human teams (bypassing the AI response generation entirely), guaranteeing that sensitive issues are handled by real people.
 
-## Project Architecture
+### 2. Precision Hybrid RAG Pipeline
+To prevent "No relevant documents found" errors on borderline tickets, the retrieval pipeline is highly tuned:
+- **Dual-Index Search:** Combines BM25 (sparse keyword search) and ChromaDB (dense vector embeddings via `all-MiniLM-L6-v2`) to recall the top 20 candidate documents.
+- **Cross-Encoder Reranking:** The candidates are passed through an MS-MARCO Cross-Encoder. The system dynamically re-ranks the documents and selects the absolute best `top_k=6` chunks to provide maximum, highly-relevant context to the synthesis model.
 
-The architecture is composed of 7 discrete pipeline states:
-
-1. **Intake Agent:** Parses PII and creates the standardized schema.
-2. **Classifier Agent:** Maps the core intent into strict domain bounds (`hr_billing`, `visa_merchant`, `claude_api`).
-3. **Risk Agent:** Executes non-LLM heuristic safety checks (`utils/safety.py`) and specific churn detection.
-4. **Retrieval Agent:** Queries the `ChromaDB` localized vector store utilizing chunked Hackathon documentation with `all-MiniLM-L6-v2` dense embeddings.
-5. **Synthesis Agent:** Drafts the professional email response directly citing retrieved sources.
-6. **Faithfulness Evaluator:** Cross-examines the synthesis to guarantee absolute truth. Flags hallucinatory statements.
-7. **Output Formatter:** Condenses the state loop into the final 5-column CSV target trace.
+### 3. The Dual-Model Synthesis & Faithfulness Gate
+Response generation is handled by **AWS Bedrock** (with an automatic fallback to **Groq**), utilizing a "Maker-Checker" architecture to eliminate hallucinations:
+- **The Maker (Claude 3.5 Sonnet / Qwen3-32b):** Synthesizes a professional, empathetic email response using *only* the provided `top_k` documents. 
+- **The Checker (Claude 3.5 Haiku / Qwen3-32b):** Acts as a strict "Faithfulness Evaluator". It cross-examines the drafted response against the retrieved source documents. If it detects any unverified claims or hallucinations, the ticket is instantly flagged as a `Faithfulness check failed` and escalated to a human.
 
 ---
 
-## Enterprise Blueprint Implementations
+## Evaluator Guide: How to Run the System
 
-To prove scalability beyond a terminal pipeline, we have included three production blueprints inside `code/enterprise/`:
-* `fastapi_server.py`: Demonstrates deploying the LangGraph system inside an API utilizing `BackgroundTasks` to handle concurrent Zendesk webhooks asynchronously.
-* `semantic_cache.py`: Intercepts recurring FAQ user intents using `Cosine Similarity` vector math to instantly return answered prompts, preventing massive LLM token waste on repeat queries.
-* `scripts/human_approval.py`: A LangGraph `interrupt_before=["output"]` checkpoint blueprint demonstrating how Human-In-The-Loop approval gateways function for IT managers.
-* `scripts/observability_dashboard.py`: Parses the pipeline output to render a Datadog-esque terminal visualization of API latency, token tracking, scaling anomalies, and escalation health ratios.
+This repository is built to be easily reproducible by the HackerRank evaluation team. Follow these steps to initialize the environment, build the vector database, and run the pipeline.
 
----
+### 1. Prerequisites & Installation
 
-## Getting Started
-
-### 1. Installation
+Ensure you have Python 3.12+ installed.
 
 ```bash
+# Clone the repository and navigate to the code directory
 cd code
-# Setup virtual environment
+
+# Create and activate a virtual environment
 python -m venv venv
+
+# Mac/Linux
 source venv/bin/activate
+# Windows
+# venv\Scripts\activate
+
+# Install the required dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Environment Variables
-Add your Groq API key to `code/.env`:
-```
-GROQ_API_KEY=gsk_your_key_here
-MODEL=llama-3.1-8b-instant
-```
+### 2. Configure Environment Variables
 
-### 3. Run the Core Hackathon Pipeline
+The system requires API keys for both **Groq** (for fast classification) and **AWS Bedrock** (for high-reasoning synthesis). 
 
-**Batch Processing (Primary Hackathon Requirement):**
-Parses `sample_support_tickets.csv` and generates the compliant `output.csv`.
+Create a `.env` file inside the `code/` directory:
+
+```env
+GROQ_API_KEY=your_groq_api_key_here
+
+```
+*(Note: If AWS credentials are not provided, the system will gracefully fall back to using Groq for all generation tasks).*
+
+### 3. Build the Knowledge Base (Corpus)
+
+Before running the agents, you must ingest the markdown documentation into the localized ChromaDB and BM25 indexes.
+
+```bash
+python scripts/build_corpus.py
+```
+*This will parse the `data/` folder and generate the vector embeddings in `data/chroma/`.*
+
+### 4. Run the Evaluation Batch
+
+To process the `support_tickets.csv` file and generate the required output for the hackathon evaluation:
+
 ```bash
 python batch.py
 ```
+*The script will process each ticket sequentially (with built-in API rate-limit delays) and output the final results to `support_tickets/output.csv`.*
 
-**Rich Interactive Terminal (For Judge Testing):**
-Launch a gorgeous command line UI to type dynamic queries directly into the graph.
+### 5. Interactive Testing (Optional)
+
+If you would like to test the agent interactively via a terminal UI, run:
+
 ```bash
 python main.py
 ```
-
-### 4. Run the Enterprise Dashboards
-Test the Observability UI matrix:
-```bash
-python scripts/observability_dashboard.py
-```
+*You can type custom support queries and watch the multi-agent graph classify, retrieve, and synthesize responses in real-time.*
 
 ---
 
 <p align="center">
-  <i>Developed specifically for the Orchestrate '26 Competition. Code engineered for stability, scale, and compliance.</i>
+  <i>Developed specifically for the Orchestrate '26 Competition. Code engineered for stability, safety, and strict evaluation compliance.</i>
 </p>

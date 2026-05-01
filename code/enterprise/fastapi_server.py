@@ -23,10 +23,10 @@ class TicketResponse(BaseModel):
     status: str
     message: str
 
-# In-memory "queue" for demonstration. In production, this would be Redis/SQS.
 PROCESSED_TICKETS = {}
 
 async def process_ticket_async(ticket_id: str, subject: str, body: str):
+    ### use of this function: process ticket async
     """Background task to run the LangGraph pipeline asynchronously."""
     pipeline = get_pipeline()
     
@@ -49,8 +49,6 @@ async def process_ticket_async(ticket_id: str, subject: str, body: str):
     }
     
     try:
-        # We use aioinvoke for async LangGraph execution (simulated here with invoke)
-        # Production: final_state = await pipeline.ainvoke(state)
         final_state = pipeline.invoke(state, config={"configurable": {"thread_id": ticket_id}})
         PROCESSED_TICKETS[ticket_id] = final_state.get("final_output")
     except Exception as e:
@@ -58,6 +56,7 @@ async def process_ticket_async(ticket_id: str, subject: str, body: str):
 
 @app.post("/ingest", response_model=TicketResponse)
 async def ingest_ticket(request: TicketRequest, background_tasks: BackgroundTasks):
+    ### use of this function: ingest ticket
     """
     Accepts a ticket from Zendesk/Salesforce, immediately returns 200 OK, 
     and processes it in the background queue.
@@ -65,7 +64,6 @@ async def ingest_ticket(request: TicketRequest, background_tasks: BackgroundTask
     if not request.body:
         raise HTTPException(status_code=400, detail="Ticket body is required")
         
-    # Queue the heavy Multi-Agent processing to a background worker
     background_tasks.add_task(process_ticket_async, request.ticket_id, request.subject, request.body)
     
     return TicketResponse(
@@ -75,6 +73,7 @@ async def ingest_ticket(request: TicketRequest, background_tasks: BackgroundTask
 
 @app.get("/status/{ticket_id}")
 async def get_ticket_status(ticket_id: str) -> Dict[str, Any]:
+    ### use of this function: get ticket status
     """Check the processing status of a ticket."""
     if ticket_id in PROCESSED_TICKETS:
         return {"status": "Complete", "result": PROCESSED_TICKETS[ticket_id]}

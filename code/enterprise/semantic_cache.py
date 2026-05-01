@@ -11,15 +11,15 @@ from sentence_transformers import SentenceTransformer
 
 class SemanticCache:
     def __init__(self, similarity_threshold: float = 0.95):
-        # We reuse the lightweight all-MiniLM-L6-v2 model you already downloaded for ChromaDB!
+        ### use of this function: init
         self.encoder = SentenceTransformer("all-MiniLM-L6-v2")
         self.threshold = similarity_threshold
         
-        # In production, this data lives in Redis Vector Store
-        self.cache_keys = []      # List of embedded vectors
-        self.cache_values = {}    # Maps index to the generated AgentState/Response
+        self.cache_keys = []     
+        self.cache_values = {}   
         
     def _cosine_similarity(self, vec_a: np.ndarray, vec_b: np.ndarray) -> float:
+        ### use of this function: cosine similarity
         """Calculate cosine similarity between two vectors."""
         dot_product = np.dot(vec_a, vec_b)
         norm_a = np.linalg.norm(vec_a)
@@ -29,6 +29,7 @@ class SemanticCache:
         return dot_product / (norm_a * norm_b)
 
     def get_cached_response(self, user_query: str) -> Optional[Dict]:
+        ### use of this function: get cached response
         """Check if an extremely similar question was already asked."""
         if not self.cache_keys:
             return None
@@ -44,7 +45,6 @@ class SemanticCache:
                 best_score = score
                 best_idx = i
                 
-        # If the user's question is 95%+ similar to an old one, return the cached result!
         if best_score >= self.threshold:
             print(f"💰 CACHE HIT! Bypassing LangGraph processing. (Similarity: {best_score:.2f})")
             return self.cache_values[best_idx]
@@ -52,6 +52,7 @@ class SemanticCache:
         return None
 
     def cache_new_response(self, user_query: str, pipeline_output: Dict):
+        ### use of this function: cache new response
         """Save a new LLM generation to the cache."""
         query_vector = self.encoder.encode(user_query)
         idx = len(self.cache_keys)
@@ -60,21 +61,17 @@ class SemanticCache:
         self.cache_values[idx] = pipeline_output
         print("💾 New query routed through LangGraph and cached for future users.")
 
-# Example Usage
 if __name__ == "__main__":
     cache = SemanticCache(similarity_threshold=0.90)
     
-    # 1. User A asks a brand new question
     query_a = "How do I reset my HackerRank password?"
     result_a = cache.get_cached_response(query_a)
     if not result_a:
-        # Normally this runs the full expensive Graph pipeline
         generated_answer = {"response": "Go to settings > reset password.", "tokens_used": 450}
         cache.cache_new_response(query_a, generated_answer)
         
     print("-" * 50)
     
-    # 2. User B asks the exact same semantic question with different wording
     query_b = "I forgot my password for HackerRank, how can I change it?"
     result_b = cache.get_cached_response(query_b)
     if result_b:

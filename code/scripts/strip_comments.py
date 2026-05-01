@@ -11,14 +11,11 @@ def remove_comments(directory):
                 new_lines = []
                 for line in lines:
                     stripped = line.lstrip()
-                    # Skip full-line comments, but keep the python shebang
                     if stripped.startswith('#') and not stripped.startswith('#!'):
                         continue
                     
-                    # Handle inline comments safely (only if '#' is preceded by a space)
-                    # This avoids breaking strings that contain URLs or hex colors like '#FFFFFF'
-                    if ' #' in line:
-                        line = line.split(' #')[0] + '\n'
+                    if '
+                        line = line.split('
                         
                     new_lines.append(line)
                 

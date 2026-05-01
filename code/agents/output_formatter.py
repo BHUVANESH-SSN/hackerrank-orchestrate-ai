@@ -16,6 +16,7 @@ from models.schemas import (
 
 
 def run_output_formatter(state: dict[str, Any]) -> dict[str, Any]:
+    ### use of this function: run output formatter
     """Assemble the final TicketOutput from all state fields."""
     try:
         risk = state["risk_result"]
@@ -24,8 +25,11 @@ def run_output_formatter(state: dict[str, Any]) -> dict[str, Any]:
         synthesis = state.get("synthesis_result")
         faithfulness = state.get("faithfulness_result")
 
-        # Determine response text
-        if risk.action == Action.ESCALATE:
+        final_action = risk.action
+        if faithfulness and not faithfulness.is_faithful:
+            final_action = Action.ESCALATE
+
+        if final_action == Action.ESCALATE:
             response_text = state.get("escalation_response", "Your case has been escalated for review.")
             sources: list[str] = []
         elif synthesis:
@@ -35,13 +39,12 @@ def run_output_formatter(state: dict[str, Any]) -> dict[str, Any]:
             response_text = "Unable to generate response. Please contact support directly."
             sources = []
 
-        # Build justification
         justification_parts: list[str] = []
         justification_parts.append(f"Domain: {domain_result.domain.value}")
         justification_parts.append(f"Product area: {domain_result.product_area.value}")
         justification_parts.append(domain_result.classification_reasoning)
 
-        if risk.action == Action.ESCALATE and risk.escalation_reason:
+        if final_action == Action.ESCALATE and risk.escalation_reason:
             justification_parts.append(f"Escalation reason: {risk.escalation_reason}")
 
         if faithfulness and faithfulness.faithfulness_score < 0.7:
@@ -49,7 +52,6 @@ def run_output_formatter(state: dict[str, Any]) -> dict[str, Any]:
 
         justification = ". ".join(justification_parts)
 
-        # Calculate processing time
         start = state.get("start_time_ms", 0)
         processing_time = int(time.time() * 1000) - start if start else 0
 
@@ -60,7 +62,7 @@ def run_output_formatter(state: dict[str, Any]) -> dict[str, Any]:
             company=state.get("company", ""),
             domain=domain_result.domain,
             product_area=domain_result.product_area,
-            action=risk.action,
+            action=final_action,
             request_type=domain_result.request_type,
             risk_score=risk.risk_score,
             response=response_text,
@@ -75,7 +77,6 @@ def run_output_formatter(state: dict[str, Any]) -> dict[str, Any]:
         return {"final_output": output}
 
     except Exception as e:
-        # Fallback output
         return {
             "final_output": TicketOutput(
                 ticket_id=state.get("ticket_id", "unknown"),
@@ -95,12 +96,12 @@ def run_output_formatter(state: dict[str, Any]) -> dict[str, Any]:
 
 
 def format_csv_row(output: TicketOutput) -> dict[str, str]:
+    ### use of this function: format csv row
     """Convert TicketOutput to a flat dict for the output CSV.
 
     Required output columns per problem_statement.md:
     status, product_area, response, justification, request_type
     """
-    # Map action → status
     status = Status.ESCALATED if output.action == Action.ESCALATE else Status.REPLIED
 
     return {

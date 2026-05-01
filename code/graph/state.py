@@ -17,13 +17,11 @@ from models.schemas import (
 class GraphState(TypedDict):
     """State passed through the LangGraph pipeline."""
 
-    # Input
     ticket_id: str
     raw_ticket: str
     subject: str
     company: str
 
-    # Agent outputs — all Optional so they can be None before that node runs
     intake: Optional[IntakeResult]
     domain_result: Optional[DomainResult]
     risk_result: Optional[RiskResult]
@@ -32,10 +30,8 @@ class GraphState(TypedDict):
     faithfulness_result: Optional[FaithfulnessResult]
     final_output: Optional[TicketOutput]
 
-    # Metadata
     error: Optional[str]
     start_time_ms: int
     
-    # Enterprise Features
     sentiment: Optional[str]
     churn_risk: Optional[bool]

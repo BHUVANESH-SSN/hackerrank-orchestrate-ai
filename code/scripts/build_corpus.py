@@ -12,7 +12,6 @@ from datetime import datetime, timezone
 from rich.console import Console
 from rich.table import Table
 
-# Ensure code/ is on path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from config.settings import settings
@@ -24,6 +23,7 @@ console = Console()
 
 
 def main() -> None:
+    ### use of this function: main
     parser = argparse.ArgumentParser(description="Build support corpus")
     parser.add_argument("--force", action="store_true", help="Force re-ingestion even if data exists")
     args = parser.parse_args()
@@ -35,7 +35,6 @@ def main() -> None:
 
     store = CorpusStore(settings.chroma_persist_dir)
 
-    # Check if already built
     domains = [Domain.HACKERRANK, Domain.CLAUDE, Domain.VISA]
     all_exist = all(store.collection_exists(d) and store.chunk_count(d) > 0 for d in domains)
 
@@ -47,10 +46,8 @@ def main() -> None:
     if args.force:
         console.print("[yellow]⚠️  Force mode — re-ingesting all domains[/]\n")
 
-    # Build corpus
     results = build_corpus()
 
-    # Print results table
     table = Table(title="Ingestion Results", show_header=True)
     table.add_column("Domain", style="bold cyan")
     table.add_column("Chunks Stored", justify="right", style="green")
@@ -62,7 +59,6 @@ def main() -> None:
     table.add_row("[bold]Total[/]", f"[bold]{total}[/]")
     console.print(table)
 
-    # Write manifest
     manifest = {
         "build_timestamp": datetime.now(timezone.utc).isoformat(),
         "corpus_dir": settings.corpus_dir,
@@ -78,6 +74,7 @@ def main() -> None:
 
 
 def _print_stats(store: CorpusStore, domains: list[Domain]) -> None:
+    ### use of this function: print stats
     """Print current corpus statistics."""
     table = Table(title="Corpus Statistics", show_header=True)
     table.add_column("Domain", style="bold cyan")

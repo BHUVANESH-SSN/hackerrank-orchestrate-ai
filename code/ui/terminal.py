@@ -14,6 +14,7 @@ console = Console()
 
 
 def print_banner() -> None:
+    ### use of this function: print banner
     """Print a styled banner."""
     banner = Text()
     banner.append("╔══════════════════════════════════════════════════╗\n", style="bold cyan")
@@ -29,8 +30,8 @@ def print_banner() -> None:
 
 
 def print_ticket_result(output: TicketOutput) -> None:
+    ### use of this function: print ticket result
     """Print a rich panel with ticket processing results."""
-    # Color based on action
     if output.action == Action.ESCALATE:
         border_color = "red"
         action_style = "[bold red]ESCALATED[/]"
@@ -41,7 +42,6 @@ def print_ticket_result(output: TicketOutput) -> None:
         border_color = "green"
         action_style = "[bold green]REPLIED[/]"
 
-    # Build content
     lines: list[str] = []
     lines.append(f"[bold]Domain:[/] {output.domain.value} | [bold]Product Area:[/] {output.product_area.value}")
     lines.append(f"[bold]Request Type:[/] {output.request_type.value}")
@@ -74,11 +74,13 @@ def print_ticket_result(output: TicketOutput) -> None:
 
 
 def print_processing_step(step_name: str, status: str) -> None:
+    ### use of this function: print processing step
     """Print a processing step indicator."""
     console.print(f"  [dim]→[/] [bold]{step_name}[/]: {status}")
 
 
 def print_corpus_stats(stats: dict[str, int]) -> None:
+    ### use of this function: print corpus stats
     """Print a table of domain → chunk count."""
     table = Table(title="📚 Corpus Statistics", show_header=True)
     table.add_column("Domain", style="bold cyan")
@@ -95,6 +97,7 @@ def print_corpus_stats(stats: dict[str, int]) -> None:
 
 
 def interactive_loop(pipeline, transcript=None) -> None:
+    ### use of this function: interactive loop
     """Main REPL loop for interactive ticket processing."""
     import time
     from graph.state import GraphState

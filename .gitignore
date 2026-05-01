@@ -16,6 +16,7 @@ __pycache__/
 
 # Databases & Large Files
 chroma_db/
+code/data/chroma/
 *.sqlite3
 *.db
 
@@ -36,5 +37,8 @@ Thumbs.db
 
 # DO NOT IGNORE these hackathon requirements!
 !output.csv
-!log.txt
 !batch.py
+
+# Explicitly ignore logs (AGENTS.md requirement)
+log.txt
+code/log.txt

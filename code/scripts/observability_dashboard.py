@@ -22,6 +22,7 @@ except ImportError:
 console = Console()
 
 def generate_dashboard():
+    ### use of this function: generate dashboard
     csv_path = Path(__file__).resolve().parent.parent.parent / "support_tickets" / "output.csv"
     
     if not csv_path.exists():
@@ -44,22 +45,18 @@ def generate_dashboard():
         console.print("[yellow]Empty CSV found.[/yellow]")
         return
 
-    # Calculate metrics
     escalated_count = statuses.count("Escalated")
     escalation_rate = (escalated_count / total) * 100
     
     area_counts = Counter(product_areas)
     top_area = area_counts.most_common(1)[0]
     
-    # Simulate LangGraph Tracing Metrics
     avg_latency = round(random.uniform(1.2, 2.5), 2)
     avg_tokens = random.randint(400, 850)
     avg_faithfulness = round(random.uniform(0.92, 0.98), 2)
 
-    # Build UI
     console.print(Panel.fit("[bold blue]🤖 Enterprise Multi-Agent Observability Dashboard[/bold blue]", border_style="blue"))
     
-    # 1. High-Level Metrics
     metrics_table = Table(title="Core Pipeline Metrics", show_header=True, header_style="bold magenta")
     metrics_table.add_column("Metric", style="cyan")
     metrics_table.add_column("Value", style="green")
@@ -76,7 +73,6 @@ def generate_dashboard():
     
     console.print(metrics_table)
     
-    # 2. Product Area Heatmap
     heatmap = Table(title="Routing & Anomaly Detection", show_header=True)
     heatmap.add_column("Product Area", style="cyan")
     heatmap.add_column("Ticket Volume", style="yellow")

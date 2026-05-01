@@ -10,12 +10,12 @@ from config.settings import settings
 from models.schemas import Domain, RetrievedChunk, RetrievalResult
 from rag.corpus_store import CorpusStore
 
-# Singleton models
 _embed_model: Optional[SentenceTransformer] = None
 _cross_encoder: Optional[CrossEncoder] = None
 
 
 def _get_embed_model() -> SentenceTransformer:
+    ### use of this function: get embed model
     global _embed_model
     if _embed_model is None:
         _embed_model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -23,6 +23,7 @@ def _get_embed_model() -> SentenceTransformer:
 
 
 def _get_cross_encoder() -> CrossEncoder:
+    ### use of this function: get cross encoder
     global _cross_encoder
     if _cross_encoder is None:
         _cross_encoder = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
@@ -33,16 +34,17 @@ class HybridRetriever:
     """Combines BM25 sparse, dense vector, and cross-encoder reranking."""
 
     def __init__(self, store: CorpusStore) -> None:
+        ### use of this function: init
         self._store = store
         self._bm25_cache: dict[str, tuple[BM25Okapi, list[dict[str, Any]]]] = {}
 
     def _build_bm25_index(self, domain: Domain) -> tuple[BM25Okapi, list[dict[str, Any]]]:
+        ### use of this function: build bm25 index
         """Build or retrieve cached BM25 index for a domain."""
         key = domain.value
         if key not in self._bm25_cache:
             chunks = self._store.get_all_chunks(domain)
             if not chunks:
-                # Return empty BM25 index
                 self._bm25_cache[key] = (BM25Okapi([[""]]), [])
                 return self._bm25_cache[key]
 
@@ -52,6 +54,7 @@ class HybridRetriever:
         return self._bm25_cache[key]
 
     def _dense_search(self, domain: Domain, query: str, top_k: int = 20) -> list[RetrievedChunk]:
+        ### use of this function: dense search
         """Embed query and search ChromaDB."""
         model = _get_embed_model()
         query_embedding = model.encode(query).tolist()
@@ -69,6 +72,7 @@ class HybridRetriever:
         ]
 
     def _sparse_search(self, domain: Domain, query: str, top_k: int = 20) -> list[RetrievedChunk]:
+        ### use of this function: sparse search
         """BM25 sparse search."""
         bm25, chunks = self._build_bm25_index(domain)
         if not chunks:
@@ -77,7 +81,6 @@ class HybridRetriever:
         tokenized_query = query.lower().split()
         scores = bm25.get_scores(tokenized_query)
 
-        # Get top_k indices by score
         scored_indices = sorted(enumerate(scores), key=lambda x: x[1], reverse=True)[:top_k]
 
         return [
@@ -98,13 +101,13 @@ class HybridRetriever:
         sparse_results: list[RetrievedChunk],
         k: int = 60,
     ) -> list[RetrievedChunk]:
+        ### use of this function: reciprocal rank fusion
         """RRF: score = sum(1 / (k + rank)). Merge and deduplicate."""
-        # Build text → chunk mapping + RRF scores
         chunk_map: dict[str, RetrievedChunk] = {}
         rrf_scores: dict[str, float] = {}
 
         for rank, chunk in enumerate(dense_results):
-            key = chunk.chunk_text[:200]  # Dedupe key
+            key = chunk.chunk_text[:200] 
             rrf_scores[key] = rrf_scores.get(key, 0.0) + 1.0 / (k + rank + 1)
             if key not in chunk_map:
                 chunk_map[key] = chunk
@@ -115,7 +118,6 @@ class HybridRetriever:
             if key not in chunk_map:
                 chunk_map[key] = chunk
 
-        # Sort by RRF score
         sorted_keys = sorted(rrf_scores.keys(), key=lambda x: rrf_scores[x], reverse=True)
 
         return [
@@ -130,6 +132,7 @@ class HybridRetriever:
         ]
 
     def _rerank(self, query: str, candidates: list[RetrievedChunk], top_k: int = 3) -> list[RetrievedChunk]:
+        ### use of this function: rerank
         """Cross-encoder reranking of candidate chunks."""
         if not candidates:
             return []
@@ -152,7 +155,8 @@ class HybridRetriever:
             for chunk, score in scored[:top_k]
         ]
 
-    def retrieve(self, domain: Domain, query: str, top_k: int = 3) -> RetrievalResult:
+    def retrieve(self, domain: Domain, query: str, top_k: int = 6) -> RetrievalResult:
+        ### use of this function: retrieve
         """
         Full hybrid retrieval pipeline:
         1. Dense search (top 20)
@@ -165,10 +169,8 @@ class HybridRetriever:
 
         total_candidates = len(dense_results) + len(sparse_results)
 
-        # RRF fusion
         fused = self._reciprocal_rank_fusion(dense_results, sparse_results)
 
-        # Cross-encoder rerank top candidates
         reranked = self._rerank(query, fused[:15], top_k=top_k)
 
         return RetrievalResult(
@@ -178,14 +180,12 @@ class HybridRetriever:
         )
 
 
-# ──────────────────────────────────────────────
-# Singleton retriever
-# ──────────────────────────────────────────────
 
 _retriever: Optional[HybridRetriever] = None
 
 
 def get_retriever() -> HybridRetriever:
+    ### use of this function: get retriever
     """Get or create the singleton HybridRetriever."""
     global _retriever
     if _retriever is None:

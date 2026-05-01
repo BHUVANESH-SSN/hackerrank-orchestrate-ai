@@ -9,6 +9,7 @@ import structlog
 
 
 def setup_structlog() -> None:
+    ### use of this function: setup structlog
     """Configure structlog for JSON file output + human-readable stdout."""
     structlog.configure(
         processors=[
@@ -17,7 +18,7 @@ def setup_structlog() -> None:
             structlog.processors.TimeStamper(fmt="iso"),
             structlog.dev.ConsoleRenderer(),
         ],
-        wrapper_class=structlog.make_filtering_bound_logger(20),  # INFO+
+        wrapper_class=structlog.make_filtering_bound_logger(20), 
         context_class=dict,
         logger_factory=structlog.PrintLoggerFactory(file=sys.stderr),
         cache_logger_on_first_use=True,
@@ -25,6 +26,7 @@ def setup_structlog() -> None:
 
 
 def get_logger(name: str) -> structlog.stdlib.BoundLogger:
+    ### use of this function: get logger
     """Get a named structlog logger."""
     setup_structlog()
     return structlog.get_logger(name)
@@ -37,9 +39,11 @@ class ChatTranscriptLogger:
     """
 
     def __init__(self) -> None:
+        ### use of this function: init
         self._entries: list[str] = []
 
     def log_ticket_start(self, ticket_id: str, raw_text: str) -> None:
+        ### use of this function: log ticket start
         """Log the start of a new ticket processing."""
         timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
         from utils.safety import redact_pii
@@ -58,6 +62,7 @@ class ChatTranscriptLogger:
         output_summary: str,
         ticket_id: str,
     ) -> None:
+        ### use of this function: log agent step
         """Log a single agent step in readable format."""
         self._entries.append(
             f"\n[{agent_name.upper()}]\n"
@@ -71,6 +76,7 @@ class ChatTranscriptLogger:
         response: str,
         sources: list[str],
     ) -> None:
+        ### use of this function: log final output
         """Log the final output for a ticket."""
         from utils.safety import redact_pii
         redacted_response = redact_pii(response)
@@ -84,6 +90,7 @@ class ChatTranscriptLogger:
         )
 
     def save(self, path: str) -> None:
+        ### use of this function: save
         """Write the full transcript log to disk."""
         filepath = Path(path)
         filepath.parent.mkdir(parents=True, exist_ok=True)

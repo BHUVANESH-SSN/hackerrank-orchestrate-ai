@@ -14,9 +14,6 @@ from config.settings import settings
 from models.schemas import Domain
 from rag.corpus_store import CorpusStore
 
-# ──────────────────────────────────────────────
-# Domain → subdirectory mapping
-# ──────────────────────────────────────────────
 
 DOMAIN_DIRS: dict[Domain, str] = {
     Domain.HACKERRANK: "hackerrank",
@@ -24,22 +21,20 @@ DOMAIN_DIRS: dict[Domain, str] = {
     Domain.VISA: "visa",
 }
 
-# Singleton embedding model
 _embed_model: SentenceTransformer | None = None
 
 
 def _get_embed_model() -> SentenceTransformer:
+    ### use of this function: get embed model
     global _embed_model
     if _embed_model is None:
         _embed_model = SentenceTransformer("all-MiniLM-L6-v2")
     return _embed_model
 
 
-# ──────────────────────────────────────────────
-# Read local corpus files
-# ──────────────────────────────────────────────
 
 def read_corpus_files(corpus_dir: str, domain: Domain) -> list[dict[str, str]]:
+    ### use of this function: read corpus files
     """
     Read all .md files from the domain's subdirectory in corpus_dir.
     Returns list of {url, title, text} dicts.
@@ -55,7 +50,6 @@ def read_corpus_files(corpus_dir: str, domain: Domain) -> list[dict[str, str]]:
             if not text or len(text) < 50:
                 continue
 
-            # Derive title from first heading or filename
             title = md_file.stem.replace("-", " ").replace("_", " ").title()
             lines = text.split("\n")
             for line in lines[:5]:
@@ -63,7 +57,6 @@ def read_corpus_files(corpus_dir: str, domain: Domain) -> list[dict[str, str]]:
                     title = line.lstrip("# ").strip()
                     break
 
-            # Build a pseudo URL from file path
             rel_path = md_file.relative_to(domain_dir)
             match domain:
                 case Domain.HACKERRANK:
@@ -86,9 +79,6 @@ def read_corpus_files(corpus_dir: str, domain: Domain) -> list[dict[str, str]]:
     return documents
 
 
-# ──────────────────────────────────────────────
-# Chunking
-# ──────────────────────────────────────────────
 
 def chunk_text(
     text: str,
@@ -98,6 +88,7 @@ def chunk_text(
     chunk_size: int = 400,
     overlap: int = 50,
 ) -> list[dict[str, Any]]:
+    ### use of this function: chunk text
     """
     Sliding-window chunking based on token count (tiktoken cl100k_base).
     Returns list of chunk dicts with id, text, source_url, source_title, domain.
@@ -117,7 +108,7 @@ def chunk_text(
         chunk_tokens = tokens[start:end]
         chunk_text_str = enc.decode(chunk_tokens).strip()
 
-        if len(chunk_text_str) > 20:  # Skip trivially small chunks
+        if len(chunk_text_str) > 20: 
             chunks.append({
                 "id": str(uuid.uuid4()),
                 "text": chunk_text_str,
@@ -136,11 +127,9 @@ def chunk_text(
     return chunks
 
 
-# ──────────────────────────────────────────────
-# Embedding
-# ──────────────────────────────────────────────
 
 def embed_chunks(chunks: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    ### use of this function: embed chunks
     """Embed all chunk texts using all-MiniLM-L6-v2. Adds 'embedding' field."""
     if not chunks:
         return chunks
@@ -155,11 +144,9 @@ def embed_chunks(chunks: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return chunks
 
 
-# ──────────────────────────────────────────────
-# Domain Ingestion
-# ──────────────────────────────────────────────
 
 def ingest_domain(domain: Domain, store: CorpusStore) -> int:
+    ### use of this function: ingest domain
     """
     Full ingestion pipeline for one domain: read files → chunk → embed → store.
     Returns number of chunks stored. Idempotent — skips if collection already has data.
@@ -188,20 +175,16 @@ def ingest_domain(domain: Domain, store: CorpusStore) -> int:
     if not all_chunks:
         return 0
 
-    # Embed
     all_chunks = embed_chunks(all_chunks)
 
-    # Store
     store.add_chunks(domain, all_chunks)
 
     return len(all_chunks)
 
 
-# ──────────────────────────────────────────────
-# Full Corpus Build
-# ──────────────────────────────────────────────
 
 def build_corpus() -> dict[str, int]:
+    ### use of this function: build corpus
     """Run ingestion for all three domains. Returns {domain: chunk_count}."""
     store = CorpusStore(settings.chroma_persist_dir)
     results: dict[str, int] = {}

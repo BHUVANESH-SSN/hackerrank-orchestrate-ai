@@ -18,6 +18,7 @@ console = Console()
 
 
 def check_corpus_ready() -> bool:
+    ### use of this function: check corpus ready
     """Check if corpus has been built."""
     store = CorpusStore(settings.chroma_persist_dir)
     for domain in [Domain.HACKERRANK, Domain.CLAUDE, Domain.VISA]:
@@ -27,6 +28,7 @@ def check_corpus_ready() -> bool:
 
 
 def main() -> None:
+    ### use of this function: main
     print_banner()
 
     if not check_corpus_ready():
@@ -34,7 +36,6 @@ def main() -> None:
         console.print("[dim]This ingests the support pages and builds the local vector database.[/dim]")
         sys.exit(1)
 
-    # Show corpus stats
     store = CorpusStore(settings.chroma_persist_dir)
     stats = {d.value: store.chunk_count(d) for d in [Domain.HACKERRANK, Domain.CLAUDE, Domain.VISA]}
     print_corpus_stats(stats)
