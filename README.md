@@ -40,33 +40,61 @@ This system is designed as an Autonomous Support Middleware capable of integrati
 
 ---
 
+
+
+
+## Architectural Vision
+
+This system is designed as an Autonomous Support Middleware capable of integrating with existing support channels such as Zendesk, Salesforce, or direct email. The core design philosophy centers on Safety-First Agentic RAG. A state-machine approach ensures that every ticket passes through a rigorous sequence of validation gates—Classification, Risk Assessment, Hybrid Retrieval, and Faithfulness Verification—before a response is generated.
+
+---
+
 ## The Agentic Ecosystem (LangGraph State Machine)
 
 The system is orchestrated using LangGraph, treating the triage process as a directed graph where each node represents a specialized agent. This enables conditional branching and deterministic error handling.
 
 ### 1. Intake and Normalization Agent
 - **Role:** Data Cleaning.
-- **Function:** Sanitizes the raw ticket body, removes metadata noise, and extracts key entities. 
+- **Function:** Sanitizes the raw ticket body, removes metadata noise, and extracts key entities. It normalizes input into a standard schema for all subsequent processing.
 
 ### 2. Multi-Domain Classifier Agent
 - **Role:** Intelligent Routing.
-- **Function:** Utilizes Llama-3.1-8B for low-latency intent detection. It maps tickets to one of three domains: HackerRank, Claude, or Visa.
+- **Function:** Utilizes Llama-3.1-8B for low-latency intent detection. It maps tickets to one of three domains: HackerRank, Claude, or Visa. It further identifies specific Product Areas (e.g., hr_billing, visa_disputes) to narrow the RAG engine's search parameters.
 
 ### 3. Risk and Safety Agent
 - **Role:** Policy Enforcement.
-- **Function:** A deterministic engine scanning for high-severity triggers such as PII leakage, security vulnerabilities, or legal threats. High-risk tickets are immediately diverted to human specialists.
+- **Function:** A deterministic engine scanning for high-severity triggers:
+  - **PII Leakage:** Detects sensitive information such as credit card numbers or order IDs.
+  - **Security Vulnerabilities:** Identifies reports of bugs or exploits.
+  - **Legal/Fraud:** Flags threats or fraud reports.
+- **Outcome:** High-risk tickets are immediately diverted to human specialists, bypassing LLM synthesis to ensure data security.
 
 ### 4. Hybrid Retrieval Agent
 - **Role:** Context Provision.
-- **Function:** Implements a multi-stage Hybrid Search pipeline combining dense vector search (ChromaDB) and sparse keyword search (BM25), followed by Cross-Encoder reranking for maximum precision.
+- **Function:** Implements a multi-stage Hybrid Search pipeline:
+  - **Dense Search:** ChromaDB with all-MiniLM-L6-v2 for semantic context.
+  - **Sparse Search:** BM25 for exact keyword matching.
+  - **Cross-Encoder Reranking:** Top 20 candidates are reranked using ms-marco-MiniLM-L-6-v2 to select the most relevant top_k=6 chunks.
 
 ### 5. Synthesis Agent (The Maker)
 - **Role:** Professional Response Generation.
-- **Function:** Uses GPT-OSS-120B to draft grounded responses using only the provided context.
+- **Function:** Uses GPT-OSS-120B to draft responses. It is strictly constrained by a system prompt to utilize only the provided context. If context is absent, it returns an INSUFFICIENT_CONTEXT status.
 
 ### 6. Faithfulness Agent (The Checker)
-- **Role:** Validation.
-- **Function:** Cross-examines the drafted response against source documents to ensure 100% factual accuracy and zero hallucinations.
+- **Role:** Quality Control and Validation.
+- **Function:** Performs a self-correction check by comparing the Maker's response against the original source documents. If unverified claims or hallucinations are detected, the ticket is flagged and escalated.
+
+---
+
+## Hybrid RAG System Design
+
+The RAG system prioritizes precision over recall. In a support context, it is preferable to escalate a ticket than to provide an incorrect answer.
+
+1.  **Preprocessing:** Documents are split into 500-token chunks with a 50-token overlap to maintain context.
+2.  **Multi-Stage Retrieval:**
+    - **Stage 1 (Recall):** BM25 and Vector Search retrieve a broad pool of candidates.
+    - **Stage 2 (Refinement):** The Cross-Encoder ensures that nuanced queries are correctly matched to the documentation.
+3.  **Domain Isolation:** The retriever only searches within the namespace identified by the Classifier, preventing cross-domain errors.
 
 ---
 
