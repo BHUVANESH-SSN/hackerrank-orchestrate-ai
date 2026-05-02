@@ -44,8 +44,6 @@ async def process_ticket_async(ticket_id: str, subject: str, body: str):
         "final_output": None,
         "error": None,
         "start_time_ms": 0,
-        "sentiment": None,
-        "churn_risk": None,
     }
     
     try:

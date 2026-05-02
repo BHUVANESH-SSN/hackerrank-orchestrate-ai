@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/Python-3.12-blue?logo=python" alt="Python"/>
   <img src="https://img.shields.io/badge/LangGraph-0.0.35-lightgray?logo=chainlink" alt="LangGraph"/>
   <img src="https://img.shields.io/badge/ChromaDB-Vector_Store-orange" alt="ChromaDB"/>
-  <img src="https://img.shields.io/badge/Llama_3.1-8B_Instant-black" alt="Meta Llama"/>
+  <img src="https://img.shields.io/badge/GPT--OSS--120B-Groq-black" alt="GPT-OSS-120B"/>
   <img src="https://img.shields.io/badge/Groq-LPU_Inference-green?logo=lightning" alt="Groq"/>
   <img src="https://img.shields.io/badge/FastAPI-Deployment-teal?logo=fastapi" alt="FastAPI"/>
   <img src="https://img.shields.io/badge/Hackathon-HackerRank-brightgreen" alt="Hackathon"/>
@@ -48,9 +48,11 @@ To prevent "No relevant documents found" errors on borderline tickets, the retri
 - **Cross-Encoder Reranking:** The candidates are passed through an MS-MARCO Cross-Encoder. The system dynamically re-ranks the documents and selects the absolute best `top_k=6` chunks to provide maximum, highly-relevant context to the synthesis model.
 
 ### 3. The Dual-Model Synthesis & Faithfulness Gate
-Response generation is handled by **AWS Bedrock**, utilizing a "Maker-Checker" architecture to eliminate hallucinations:
-- **The Maker (Claude 3.5 Sonnet):** Synthesizes a professional, empathetic email response using *only* the provided `top_k` documents. 
-- **The Checker (Claude 3.5 Haiku):** Acts as a strict "Faithfulness Evaluator". It cross-examines Sonnet's drafted response against the retrieved source documents. If Haiku detects any unverified claims or hallucinations, the ticket is instantly flagged as a `Faithfulness check failed` and escalated to a human.
+Response generation is optimized for high-reasoning accuracy:
+- **The Maker (GPT-OSS-120B via Groq / Claude Sonnet 4.5 via Bedrock):** An ultra-large 120B parameter model selected for its superior instruction following and grounding capability. It synthesizes a professional, empathetic email response using *only* the provided `top_k` documents. 
+- **The Checker (GPT-OSS-120B via Groq/ Claude 4.5 Haiku via Bedrock):** Acts as a strict "Faithfulness Evaluator". It cross-examines the drafted response against the retrieved source documents. If any unverified claims or hallucinations are detected, the ticket is instantly flagged and escalated.
+
+*Note: The system also includes a native integration for **AWS Bedrock (Claude 3.5 Sonnet)**, which can be activated by providing AWS credentials in the `.env` file.*
 
 ---
 

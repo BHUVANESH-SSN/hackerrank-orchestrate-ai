@@ -1,128 +1,181 @@
 status,product_area,response,justification,request_type
-Replied,claude_account,"If your IT admin removed your seat, they will need to reassign it to you in the organization settings. Here's how they can restore your access:
+Escalated,claude_account,Your case has been escalated for review.,Cross-domain hallucination detected in original response.,product_issue
+Escalated,assessments,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,product_issue
+Escalated,visa_merchant,Your case has been escalated for review.,Cross-domain hallucination detected in original response.,product_issue
+Escalated,assessments,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,bug
+Escalated,hr_billing,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,product_issue
+Escalated,hr_general,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,product_issue
+Replied,screen,"I'm here to help you with your issue. To view the ""Apply"" tab, you need to follow these steps:
 
-1. Go to **[Organization settings > Organization](https://claude.ai/admin-settings/organization)**
-2. Find your user in the member list
-3. Select ""Enterprise seat"" from the **Seat Type** dropdown
+* Log in to the [HackerRank Community](https://www.hackerrank.com/auth/login) using your credentials.
+* After logging in, you should be able to see the ""Apply"" tab to view available developer jobs.
 
-This will immediately restore your access. As a non-admin user, you'll need to coordinate with your organization's Owner or Admin to have them perform these steps.
+If you're still unable to see the ""Apply"" tab, please ensure that you're logged in and that your account is active. 
 
-Sources: [https://support.claude.com/en/team-and-enterprise-plans/admin-management/13133750-manage-members-on-team-and-enterprise-plans.md](https://support.claude.com/en/team-and-enterprise-plans/admin-management/13133750-manage-members-on-team-and-enterprise-plans.md), [https://support.claude.com/en/team-and-enterprise-plans/admin-management/13393991-purchase-and-manage-seats-on-enterprise-plans.md](https://support.claude.com/en/team-and-enterprise-plans/admin-management/13393991-purchase-and-manage-seats-on-enterprise-plans.md)","Domain: claude. Product area: claude_account. The ticket mentions losing access to a Claude team workspace, indicating a product issue with account access.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
-Escalated,assessments,Your case has been escalated for review.,"Domain: hackerrank. Product area: assessments. The ticket mentions a HackerRank test and a dispute with the recruiter, indicating a product issue with the assessment feature.. Escalation reason: No relevant support documents found. Faithfulness concern: Insufficient context to answer securely",product_issue
-Replied,visa_merchant,"If you believe the merchant has sent the wrong product and is not responding, you can:  
-1. **Report the issue** using Visa's [online form](https://usa.visa.com/Forms/visa-rules.html) to escalate the dispute.  
-2. **Contact your Visa card issuer directly** (not Visa) to initiate a refund or chargeback process, as they manage your account.  
+Sources: https://support.hackerrank.com/hc/en-us/hackerrank_community/additional-resources/job-search-and-applications/1560975739-search-for-jobs.md","Domain: hackerrank. Product area: screen. The ticket mentions HackerRank and a submission issue, indicating a problem with the screen product area.",bug
+Replied,assessments,"**Possible reasons why your submissions aren’t working and steps to try**
 
-Visa cannot ""ban"" merchants, but reporting the issue may trigger internal reviews by Visa or the payment network. For urgent assistance, also reach out to your card issuer’s customer service.  
+- **Refresh the challenge**
+  1. Close the challenge window and reopen it using the same challenge link.  
+  2. Open the challenge in another supported browser (latest Chrome, Firefox, or Edge).  
+  3. Make sure your internet connection is stable.  
 
-Sources: [Support](https://www.visa.co.in/support/support.md), [Visa Rules](https://www.visa.co.in/support/support/consumer/visa-rules.md)","Domain: visa. Product area: visa_merchant. The ticket mentions a Visa card and a merchant, indicating a product issue related to Visa merchant services.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
-Escalated,assessments,Your case has been escalated for review.,"Domain: hackerrank. Product area: assessments. The ticket mentions mock interviews, which is a feature of HackerRank's assessments product area, and the issue is not working, indicating a bug.. Escalation reason: No relevant support documents found. Faithfulness concern: Insufficient context to answer securely",bug
-Escalated,hr_billing,Your case has been escalated for review.,"Domain: hackerrank. Product area: hr_billing. The ticket mentions HackerRank and a payment issue, indicating a product issue with the billing system.. Escalation reason: PII detected in ticket — handle with care",product_issue
-Escalated,hr_general,Your case has been escalated for review.,"Domain: hackerrank. Product area: hr_general. The ticket mentions HackerRank and hiring, indicating a product issue related to the general HR functionality.. Escalation reason: No relevant support documents found. Faithfulness concern: Insufficient context to answer securely",product_issue
-Replied,screen,"If you are unable to see the **Apply** tab, ensure the following:  
-1. You are logged in to your HackerRank account using the correct credentials.  
-2. You are accessing the HackerRank Community platform ([https://www.hackerrank.com](https://www.hackerrank.com)).  
+- **Wait for the system to process your submission**
+  - After you submit, results may take a short time to appear. Check the upper‑right corner of the challenge page for points, badges, and rank once evaluation finishes.  
 
-If the issue persists, it may be related to account-specific configurations or browser compatibility, which are not covered in the provided context.  
+- **Verify you’re using the correct account**
+  - Log in with the same HackerRank Community account you used to join the challenge; results do not appear across different accounts.  
 
-Sources: [https://help.hackerrank.com/articles/1560975739-search-for-jobs](https://help.hackerrank.com/articles/1560975739-search-for-jobs)","Domain: hackerrank. Product area: screen. The ticket mentions HackerRank and a submission issue, indicating a problem with the HackerRank platform.",bug
-Escalated,assessments,Your case has been escalated for review.,"Domain: hackerrank. Product area: assessments. The ticket mentions HackerRank and an issue with taking a test, which suggests a problem with the assessments product area.. Escalation reason: No relevant support documents found. Faithfulness concern: Insufficient context to answer securely",bug
-Escalated,screen,Your case has been escalated for review.,"Domain: hackerrank. Product area: screen. The ticket mentions HackerRank and a specific issue with taking a test, which suggests a product issue with the screen or assessment feature.. Escalation reason: No relevant support documents found. Faithfulness concern: Insufficient context to answer securely",product_issue
-Escalated,assessments,Your case has been escalated for review.,"Domain: hackerrank. Product area: assessments. The ticket mentions HackerRank assessment, indicating a request related to the product's assessment feature.. Escalation reason: No relevant support documents found. Faithfulness concern: Insufficient context to answer securely",product_issue
-Escalated,hr_general,Your case has been escalated for review.,"Domain: hackerrank. Product area: hr_general. The ticket mentions HackerRank and HR, indicating a request related to the HackerRank HR system, specifically a product issue with inactivity times.. Escalation reason: No relevant support documents found. Faithfulness concern: Insufficient context to answer securely",product_issue
-Escalated,unknown,Your case has been escalated for review.,"Domain: hackerrank. Product area: unknown. The ticket mentions 'it’s not working' which suggests a product issue, and the company field is HackerRank, which is a strong signal for the 'hackerrank' domain.. Escalation reason: No relevant support documents found. Faithfulness concern: Insufficient context to answer securely",bug
-Replied,hr_general,"To remove an interviewer from an interview template, follow these steps:  
+- **If the problem persists**
+  - Contact HackerRank support at **help@hackerrank.com** for further assistance.  
 
-1. Navigate to **Interviews > Templates**.  
-2. Click the **More options (⋮)** menu next to the relevant template.  
-3. Select **Share**.  
-4. In the **Share Interview Template** dialog, choose the user or team you want to remove.  
-5. Click **Remove User** from the drop-down menu.  
+**Sources:**  
+- Source 3: Coding Challenges FAQs (steps for challenges not loading / infinite processing and missing results)","Domain: hackerrank. Product area: assessments. The ticket mentions HackerRank and an issue with taking a test, which suggests a problem with the assessments product area.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to generate JSON. Please adjust ",bug
+Replied,assessments,"- The compatibility page now includes a **WebSocket connectivity check** that will identify issues with the Zoom (WebSocket) connection and show steps to fix them【2†L1-L4】.  
+- Please revisit the compatibility page, follow the on‑screen guidance to resolve the WebSocket problem (e.g., check your network/firewall settings, try a different network, or disable VPNs).  
+- If the issue persists after following the provided guidance, you can:
+  - Visit the **candidate support portal** for additional FAQs and resources【1†L9-L12】.  
+  - Reach out directly to **support@hackerrank.com** for technical assistance【1†L13-L14】.  
 
-This process removes their access to the specific template. If you're working within an active interview session instead of a template, this option may not be available—ensure you're editing the template settings.  
+**Next steps:** Run the compatibility check again after applying the suggested fixes; if the Zoom/WebSocket error remains, contact the support email above.
 
-Sources: [https://support.hackerrank.com/hc/en-us/interviews/manage-interviews/2837093779-standardizing-interviews-using-templates.md](https://support.hackerrank.com/hc/en-us/interviews/manage-interviews/2837093779-standardizing-interviews-using-templates.md)","Domain: hackerrank. Product area: hr_general. The ticket mentions HackerRank and a specific feature request to remove a user, indicating a product issue in the HR general area.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
-Replied,hr_billing,"To pause your HackerRank subscription, follow these steps:  
+**Sources:** [April 2026 Release Notes](https://support.hackerrank.com/hc/en-us/general-help/release-notes/4368819843-april-2026-release-notes.md), [Onboarding Candidates](https://support.hackerrank.com/hc/en-us/uncategorized/9695299159-onboarding-candidates.md)","Domain: hackerrank. Product area: assessments. The ticket mentions compatible check and taking a test, which are related to HackerRank's assessment feature.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
+Escalated,assessments,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,product_issue
+Escalated,hr_general,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,product_issue
+Escalated,unknown,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,bug
+Escalated,hr_general,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,product_issue
+Replied,hr_billing,"**How to pause your HackerRank subscription**
 
-1. **Check Eligibility**:  
-   - Ensure your subscription is active for at least 30 days (including a 7-day grace period for late payments).  
-   - Confirm you have a **monthly subscription** (e.g., Individual Monthly - Basic or Interview Monthly).  
+1. **Check the prerequisites**  
+   - Your subscription must be **active for at least 30 days** (includes a 7‑day renewal grace period).  
+   - It must be a **monthly plan** of either **Individual Monthly – Basic** or **Interview Monthly**【Source 1】.
 
-2. **Pause Subscription**:  
-   - Click your **profile icon** → **Settings** → **Billing** under the **Subscription** section.  
-   - Follow the prompts to **Confirm Pause**. A confirmation message will display the pause duration and automatic resume date.  
+2. **Pause the subscription**  
+   - Click the **profile icon** (top‑right) → **Settings**.  
+   - Go to **Billing** under the **Subscription** section.  
+   - Select **Pause Subscription** and click **Confirm Pause**. A confirmation popup will show the pause duration and the automatic resume date【Source 1】【Source 2】.
 
-3. **Note**: During the paused period, you won’t be able to access your account.  
+3. **What happens while paused**  
+   - If you try to log in during the paused period, you’ll see a popup informing you that the account is paused and you cannot access it until it’s resumed【Source 2】.
 
-If you encounter issues, contact [support@hackerrank.com](mailto:support@hackerrank.com) for assistance.  
+If you meet the above conditions, you can complete the pause yourself using these steps. Let us know if you encounter any issues or need further assistance.  
 
-Sources: [Pause Subscription](https://support.hackerrank.com/articles/5157311476-pause-subscription)","Domain: hackerrank. Product area: hr_billing. The request is to pause a subscription, which is related to billing and is a common product issue.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
-Replied,claude_ui,"If Claude is completely unresponsive and all requests are failing, this may be due to **system-wide capacity constraints** (temporary high demand) or a **service incident**. Here's how to proceed:
+**Sources:**  
+- 【Source 1】  
+- 【Source 2】","Domain: hackerrank. Product area: hr_billing. The request is related to subscription management, which is a billing feature in HackerRank.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
+Replied,claude_general,"- **Check for capacity‑related messages** – If you see *“Due to unexpected capacity constraints, Claude is unable to respond to your message. Please try again soon.”* this indicates a temporary load‑management issue. Try again in a few minutes; the problem usually resolves as demand shifts【Source 2】.  
 
-- Check [status.claude.com](https://status.claude.com) to confirm if there's an active service disruption.
-- If no incident is reported, capacity constraints may be causing delays. Try again in a few minutes, as these issues typically resolve as demand fluctuates.
+- **Verify there isn’t a service incident** – Visit [status.claude.com](https://status.claude.com) to see if a confirmed outage is affecting all users. If an incident is listed, wait for the team to resolve it【Source 2】.  
 
-> **Note:** Capacity constraints are temporary and not classified as outages. The system remains operational but manages high user demand.
+- **If you’re using Claude Cowork** – Make sure the Claude Desktop app remains open and your computer stays awake. Closing the app or letting the computer sleep can stop Claude from processing requests【Source 3】.  
 
-Sources: [https://support.claude.com/en/claude/troubleshooting/12466728-troubleshoot-claude-error-messages.md](https://support.claude.com/en/claude/troubleshooting/12466728-troubleshoot-claude-error-messages.md)","Domain: claude. Product area: claude_ui. The ticket mentions Claude not responding and all requests failing, indicating a UI issue with Claude.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",bug
-Replied,visa_general,"I'm sorry, this request is outside the scope of our support capabilities. If you have a question related to our products or services, please feel free to ask.","Domain: visa. Product area: visa_general. The ticket mentions identity theft, which is a general issue not related to Visa's products or services, and the request is not about a product or feature.",invalid
-Escalated,hr_general,Your case has been escalated for review.,"Domain: hackerrank. Product area: hr_general. The ticket mentions HackerRank and a product issue with Resume Builder, which is a feature of HackerRank's HR General product area.. Escalation reason: No relevant support documents found. Faithfulness concern: Insufficient context to answer securely",bug
-Replied,hr_general,"If your name is incorrect on your HackerRank certificate, you can update it yourself following these steps:  
+- **If none of the above apply** – The issue may be specific to your environment. Try restarting the browser or desktop app, and ensure you have a stable internet connection.
 
-1. **Log in** to the same HackerRank Community account used to complete the assessment.  
-2. Navigate to your **certificate page**.  
-3. In the **Full Name** field, enter the corrected name.  
-4. Click **Regenerate Certificate** and confirm by clicking **Update Name** in the dialog.  
+**Next steps**  
+1. Look for the capacity‑constraint message and retry after a short wait.  
+2. Check the status page for any active incidents.  
+3. If using Cowork, confirm the Desktop app is running and the machine is awake.  
 
-**Important Notes**:  
-- This change applies to **all your certificates** associated with the account.  
-- You can only update the name **once** per account.  
+If the problem persists after these checks, please let us know any error messages you see so we can investigate further.  
 
-If you still don’t see the updated certificate after completing these steps, ensure you’ve passed the test and allow a few minutes for the update to reflect.  
+**Sources:** 【Source 2】, 【Source 3】","Domain: claude. Product area: claude_general. The ticket mentions Claude, the product not responding, and failing requests, indicating a general issue with the product.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",bug
+Replied,visa_general,"I'm sorry, this request is outside the scope of our support capabilities. If you have a question related to our products or services, please feel free to ask.","Domain: visa. Product area: visa_general. The ticket mentions identity theft, which is a general issue, and the company field explicitly states Visa, so it's classified as a general support issue.",invalid
+Escalated,hr_general,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,product_issue
+Replied,hr_general,"**How to update the name on your certificate**
 
-Sources: [https://support.hackerrank.com/hc/en-us/hackerrank_community/certifications/8941367927-certifications-faqs.md](https://support.hackerrank.com/hc/en-us/hackerrank_community/certifications/8941367927-certifications-faqs.md)","Domain: hackerrank. Product area: hr_general. The ticket mentions HackerRank and a certificate issue, indicating a product issue with the HackerRank platform.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
-Replied,visa_disputes,"To dispute a charge, you should contact your **issuer or bank** using the freephone number provided on the front or back of your Visa card (note: the freephone number is only free when dialing from within the USA). Your issuer or bank will guide you through the process and may require detailed information about the transaction to resolve the dispute.  
+- Log in to the HackerRank Community account you used for the assessment.  
+- Open your **certificate page**.  
+- In the **Full Name** field, enter the correct name you want to display.  
+- Click **Regenerate Certificate**.  
+- In the confirmation dialog, click **Update Name**.  
 
-For merchants handling disputes, refer to the steps in the [Dispute Resolution](https://www.visa.co.in/support/small-business/dispute-resolution.html) section, such as providing transaction receipts and collaborating with your acquirer.  
+**Important notes**
 
-Sources: [https://www.visa.co.in/support/support.md](https://www.visa.co.in/support/support.md), [https://www.visa.co.in/support/small-business/dispute-resolution.html](https://www.visa.co.in/support/small-business/dispute-resolution.html)","Domain: visa. Product area: visa_disputes. The ticket mentions disputing a charge, which is a specific product feature of Visa.. Faithfulness concern: Faithfulness check error: Expecting value: line 1 column 1 (char 0)",product_issue
-Escalated,claude_general,Your case has been escalated for review.,"Domain: claude. Product area: claude_general. The ticket mentions a security vulnerability in Claude, indicating a bug, and the company field explicitly states Claude as the domain.. Escalation reason: Security vulnerability report",bug
-Replied,claude_general,"Pour empêcher Claude de crawler votre site web, voici les étapes à suivre :
+- You can update the name **only once per account**; the change will apply to all of your certificates and cannot be changed again.  
 
-- **Méthode recommandée** :  
-  Ajoutez les lignes suivantes à votre fichier `robots.txt` (disponible à la racine de votre site) :  
-  ```
-  User-agent: ClaudeBot  
-  Disallow: /
-  ```  
-  Cela bloque l'accès de ClaudeBot à l'ensemble de votre site. Répétez cette configuration pour chaque sous-domaine souhaité.
+Sources: 【Source 1】, 【Source 2】","Domain: hackerrank. Product area: hr_general. The ticket mentions an assessment and a certificate, which are both related to HackerRank's services.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
+Replied,visa_disputes,"**How to dispute a charge**
 
-- **Option complémentaire** :  
-  Vous pouvez également utiliser la directive `Crawl-delay` pour limiter la fréquence des crawls (exemple : `Crawl-delay: 1`), toujours dans le fichier `robots.txt`.
+- Call the free‑phone number printed on the front or back of your Visa card (the number is free only when dialed from within the USA).  
+- Speak with your card issuer or bank and let them know you want to dispute a specific transaction.  
+- Be prepared to provide detailed information about the transaction (date, amount, merchant name, etc.) as your issuer may request this to resolve the dispute.
 
-- **Contacter Anthropic** :  
-  Si vous rencontrez des problèmes ou souhaitez vérifier que les crawls sont bien arrêtés, contactez [claudebot@anthropic.com](mailto:claudebot@anthropic.com) depuis une adresse email liée à votre domaine.
+**Sources:** [Source 2]","Domain: visa. Product area: visa_disputes. The ticket mentions a dispute charge, which is a clear indicator of the visa disputes product area and a product issue request type.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
+Escalated,claude_general,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,bug
+Replied,claude_general,"- **Add a robots.txt rule to block Claude’s crawler**  
+  1. Open (or create) the `robots.txt` file in the top‑level directory of each sub‑domain you want to protect.  
+  2. Insert the following lines:  
 
-> ⚠️ **Ne bloquez pas les adresses IP directement** : Cela empêcherait Anthropic de lire votre fichier `robots.txt`, rendant l'opt-out impossible.  
-> Liste des IPs d'Anthropic : [https://claude.com/crawling/bots.json](https://claude.com/crawling/bots.json)
+     ```
+     User-agent: ClaudeBot
+     Disallow: /
+     ```  
 
-Sources : [https://support.claude.com/en/privacy-and-legal/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler.md](https://support.claude.com/en/privacy-and-legal/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler.md)","Domain: claude. Product area: claude_general. The user is asking about a specific feature of Claude, indicating a product issue.. Faithfulness concern: Faithfulness check error: Expecting value: line 1 column 1 (char 0)",product_issue
-Replied,visa_general,"I'm sorry, this request is outside the scope of our support capabilities. If you have a question related to our products or services, please feel free to ask.","Domain: visa. Product area: visa_general. The ticket mentions urgent need for cash and VISA card, but the request is not related to a product issue or feature request, and the language is not specific to a product area.",invalid
-Replied,claude_general,"If you are part of the Development Partner Program and allow Claude to use your data for model improvement, your data will be stored securely for **up to two years**. Data used for model training will not be associated with other customer information. You can leave the program at any time, but previously shared data will remain stored for the full 2-year period.
+  3. Save the file and ensure it is publicly reachable (e.g., `https://yourdomain.com/robots.txt`).  
 
-Sources: [https://support.claude.com/en/claude-api-and-console/using-the-claude-api-and-console/11174108-about-the-development-partner-program.md](https://support.claude.com/en/claude-api-and-console/using-the-claude-api-and-console/11174108-about-the-development-partner-program.md)","Domain: claude. Product area: claude_general. The ticket mentions Claude, indicating the domain is claude, and the user is asking about product usage, indicating the request type is product_issue.. Faithfulness concern: Faithfulness check error: Expecting value: line 1 column 1 (char 0)",product_issue
-Escalated,hr_general,Your case has been escalated for review.,"Domain: hackerrank. Product area: hr_general. The request is asking for a specific action related to file management, which is a common task in the HackerRank platform.. Escalation reason: No relevant support documents found. Faithfulness concern: Insufficient context to answer securely",product_issue
-Replied,visa_general,,"Domain: visa. Product area: visa_general. The customer is asking for help with a Visa-related issue, specifically a blocked card, and is requesting guidance on how to proceed.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
-Replied,claude_api,,Domain: claude. Product area: claude_api. The mention of Claude and AWS Bedrock in the ticket indicates a problem with the Claude API.. Faithfulness concern: Faithfulness check error: Expecting value: line 1 column 1 (char 0),product_issue
-Replied,hr_account,"Para remover a un empleado de su cuenta de contratación en HackerRank, siga estos pasos:
+- **Optional: Reduce crawl frequency**  
+  - If you prefer to allow crawling but limit its speed, you can use the non‑standard `Crawl-delay` directive:  
 
-1. **Inicie sesión como Administrador de la empresa** en HackerRank.
-2. Vaya a la **página de Candidatos**.
-3. **Busque al empleado** que desea eliminar.
-4. Haga clic en la opción **Eliminar**.
+    ```
+    User-agent: ClaudeBot
+    Crawl-delay: 1
+    ```  
 
-Tenga en cuenta que esto eliminará permanentemente el perfil del candidato de su cuenta.
+- **Do not rely on IP blocking**  
+  - Blocking IP addresses may not reliably stop the crawler and can interfere with Anthropic’s ability to read your robots.txt.  
 
-Sources: [2634495557-GDPR-FAQs-for-HackerRank-for-Work](https://support.hackerrank.com/hc/en-us/settings/gdpr-and-nyc-ai-laws/2634495557-gdpr-faqs-for-hackerrank-for-work.md)","Domain: hackerrank. Product area: hr_account. The ticket mentions an employee leaving the company and a request to remove them from a Hackerrank hiring account, indicating a product issue related to HR account management.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to generate JSON. Please adjust ",product_issue
-Replied,claude_ui,,"Domain: claude. Product area: claude_ui. The ticket mentions Claude and setting up an LTI key, indicating a product issue with the Claude UI.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
-Replied,visa_merchant,,"Domain: visa. Product area: visa_merchant. The ticket mentions Visa card and a specific merchant-related issue, indicating a product issue with Visa merchant services.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
+- **If you suspect a malfunction or need further assistance**  
+  - Email `claudebot@anthropic.com` from an address that includes the domain you’re reporting about.  
+
+Sources: 【Source 1】.","Domain: claude. Product area: claude_general. The ticket mentions Claude and a specific action related to its functionality, indicating a product issue.",product_issue
+Replied,visa_general,"I'm sorry, this request is outside the scope of our support capabilities. If you have a question related to our products or services, please feel free to ask.","Domain: visa. Product area: visa_general. The request is not related to a Visa product or service, but rather a personal financial need.",invalid
+Replied,claude_general,"- When you opt‑in to let Claude use your data for model improvement, the data you share is stored securely **for up to two years**. After that period it is deleted, and any data used for training is not linked to other customer information.  
+
+**Sources:**  
+- Source 1: “Your data will be stored securely for up to two years…”【https://support.claude.com/en/claude-api-and-console/using-the-claude-api-and-console/11174108-about-the-development-partner-program.md】  
+- Source 3: Same statement about data being retained for up to two years【https://support.claude.com/en/articles/11174108-about-the-development-partner-program】","Domain: claude. Product area: claude_general. The ticket mentions Claude, indicating the domain is claude, and the user is asking about product usage, indicating a product_issue request type.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
+Escalated,hr_general,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,product_issue
+Escalated,visa_general,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,product_issue
+Escalated,claude_api,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,product_issue
+Escalated,hr_account,Your case has been escalated for review.,Insufficient grounded context found for a safe reply.,product_issue
+Replied,claude_ui,"**How to set up a Claude LTI key for your students (Canvas + Claude for Education)**  
+
+1. **Create the Claude LTI developer key in Canvas**  
+   - Sign in to Canvas as an administrator.  
+   - Go to **Admin → Developer Keys**.  
+   - Click **+ Developer Key** → **+ LTI Key**.  
+   - Fill in the fields:  
+     - **Key Name:** Claude LTI  
+     - **Description:** (short description of the Claude LTI 1.3 app)  
+     - **Redirect URIs:** `https://claude.ai/lti/launch`  
+     - **Title:** Claude LTI  
+     - **Target Link URI:** `https://claude.ai/lti/launch`  
+     - **OpenID Connect Initiation URL:** `https://claude.ai/api/lti/login`  
+     - **JWK method:** `https://claude.ai/api/lti/keys`  
+   - Save the key.  
+
+2. **Enable the Claude LTI integration in Claude for Education**  
+   - Sign in to Claude for Education as an administrator.  
+   - Navigate to **Organization settings → Connectors**.  
+   - Locate **Canvas** and click **Enable**.  
+   - In the modal, enter:  
+     - **Canvas Domain** (your institution’s Canvas URL)  
+     - **Client ID** (found in Canvas → Admin → Developer Keys)  
+     - **Deployment ID** (Canvas → Admin → Settings → Apps → View App Configurations → Claude LTI Settings → Deployment ID)  
+   - Click **Save Changes**. The integration should now be active.  
+
+3. **Next steps**  
+   - Once enabled, you can add Claude LTI links to your course pages so students can launch Claude directly from Canvas.  
+   - If you encounter any issues or have questions about your Claude for Education plan, contact your university’s Claude administrator.  
+
+**Sources**  
+- Creating Claude LTI Developer Key in Canvas【Source 2】  
+- Enabling Claude LTI integration in Claude for Education【Source 1】","Domain: claude. Product area: claude_ui. The ticket explicitly mentions Claude and the user is a professor setting up an LTI key for students, indicating a product issue with the UI.. Faithfulness concern: Faithfulness check error: Error code: 400 - {'error': {'message': ""Failed to validate JSON. Please adjust ",product_issue
+Replied,visa_merchant,"- In the U.S. Virgin Islands merchants are allowed to require a **minimum purchase amount of US $10**, but **only for Visa credit‑card transactions**.  
+- This rule does **not** apply to Visa debit cards, and merchants cannot set a higher minimum than $10 for credit cards.  
+- If the merchant is refusing your Visa card because they require a minimum amount (or a higher amount) that does not follow this rule, you should **notify your Visa card issuer**.  
+- You can also take immediate action by **filling out the merchant‑concern form** provided by Visa.  
+
+**Sources:**  
+- Source 1: “In those locations, and only for credit cards, a merchant may require a minimum transaction amount of US $10… please notify your Visa card issuer.”  
+- Source 3: “If you have concerns involving a merchant, you can take action immediately by filling out this form.”","Domain: visa. Product area: visa_merchant. The ticket mentions Visa card and a specific merchant-related issue, indicating a product issue with Visa merchant services.. Faithfulness concern: Faithfulness check error: Expecting value: line 1 column 1 (char 0)",product_issue

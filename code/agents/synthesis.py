@@ -24,12 +24,10 @@ from models.schemas import (
 
 def _use_bedrock() -> bool:
     ### use of this function: use bedrock
-    """Check if AWS Bedrock credentials are configured."""
-    return bool(
-        os.environ.get("AWS_ACCESS_KEY_ID")
-        or os.environ.get("AWS_PROFILE")
-        or getattr(settings, "aws_access_key_id", "")
-    )
+    """Check if AWS Bedrock credentials are configured.
+    Currently disabled: AWS account requires valid payment instrument.
+    """
+    return False
 
 
 def _call_bedrock(messages: list[dict], model_id: str, max_tokens: int = 800, temperature: float = 0.2) -> str:
@@ -78,7 +76,7 @@ def _call_bedrock(messages: list[dict], model_id: str, max_tokens: int = 800, te
     return ""
 
 
-def _call_groq(messages: list[dict], model: str = "qwen/qwen3-32b", max_tokens: int = 800, temperature: float = 0.2, json_mode: bool = False) -> str:
+def _call_groq(messages: list[dict], model: str = "openai/gpt-oss-120b", max_tokens: int = 800, temperature: float = 0.2, json_mode: bool = False) -> str:
     ### use of this function: call groq
     """Fallback: Call Groq API."""
     from groq import Groq
@@ -120,8 +118,8 @@ def _call_llm(messages: list[dict], max_tokens: int = 800, temperature: float = 
     """
     if _use_bedrock():
         bedrock_models = {
-            "synthesis": "anthropic.claude-sonnet-4-5-20250929-v1:0",
-            "faithfulness": "anthropic.claude-haiku-4-5-20251001-v1:0",
+            "synthesis": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+            "faithfulness": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
         }
         model_id = bedrock_models.get(model_tier, bedrock_models["synthesis"])
         return _call_bedrock(messages, model_id, max_tokens, temperature)

@@ -133,8 +133,7 @@ def main() -> None:
                 )
 
             progress.advance(task)
-            # Always wait at least 8 seconds to respect Groq free tier rate limits
-            # (Classifier and Risk agents still use Groq Llama 8B)
+            # Rate limit delay: 8s for Groq free tier, reduce to 2s if using Bedrock
             time.sleep(8)
 
     out_df = pd.DataFrame(results)
